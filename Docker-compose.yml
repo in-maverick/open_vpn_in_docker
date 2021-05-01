@@ -1,0 +1,22 @@
+version: "3.0"
+services:
+  client:
+    build: .
+    restart: always
+    networks:
+      - default
+    cap_add:
+      - NET_ADMIN
+    command: openvpn --config /opt/openvpn/aws-vpn-client.ovpn --auth-user-pass /etc/openvpn/client/auth.txt --auth-nocache
+    devices:
+      - /dev/net/tun
+    volumes:
+      - ./vpn-client.ovpn:/opt/openvpn/vpn-client.ovpn:ro
+      - ./auth.txt:/etc/openvpn/client/auth.txt:ro
+      - ./staging_xxxx.pem:/staging_xxxx.pem:ro
+    environment:
+      - OPENVPN_PROVIDER=CUSTOM
+      - OPENVPN_USERNAME=aaaa
+      - OPENVPN_PASSWORD=aaaa
+networks:
+  default:
